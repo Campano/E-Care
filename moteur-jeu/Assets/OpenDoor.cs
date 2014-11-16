@@ -6,7 +6,7 @@ public class OpenDoor : MonoBehaviour {
 	[SerializeField]
 	public float moveSpeed;
 	public Rigidbody _porte;
-	public float ouverture = 0.5f; // INTEGRATION : supprimer l'attribution de valeur
+	public float ouverture; 
 
 	private float position_initiale;
 	private char orientation;
@@ -41,16 +41,26 @@ public class OpenDoor : MonoBehaviour {
 		 {
 			if(Input.GetKey(KeyCode.P)) // INTEGRATION : récupérer le % d'ouverture et le stocker dans "long ouverture"
 			{
+				Debug.Log("getkey ");
 				if(orientation == 'x')
 				{
-					while(_porte.transform.position.x < position_initiale + (ouverture * _porte.renderer.bounds.size.x))
+					Debug.Log("DANS IF :"+orientation);
+					while(_porte.transform.position.x < position_initiale + (ouverture * _porte.renderer.bounds.size.x)) // tant qu'on n'a pas atteint la position finale
+					{	
+						Debug.Log("DANS WHILE :"+orientation);
 						_porte.transform.Translate(new Vector3(1, 0, 0) * moveSpeed * Time.deltaTime);
+					}
+					Debug.Log("APRES WHILE :"+orientation);
 				}
 
 				else if(orientation == 'z')
 				{
-					while(_porte.transform.position.z < position_initiale + (ouverture * _porte.renderer.bounds.size.z))
-						_porte.transform.Translate(new Vector3(0, 0, 1) * moveSpeed);
+					Debug.Log("DANS IF :"+orientation);
+					while(_porte.transform.position.z < position_initiale + (ouverture * _porte.renderer.bounds.size.z)) // tant qu'on n'a pas atteint la position finale
+					{	
+						Debug.Log("DANS WHILE :"+orientation);
+						_porte.transform.Translate(new Vector3(0, 0, 1) * moveSpeed * Time.deltaTime);
+					}
 				}
 
 				else 
