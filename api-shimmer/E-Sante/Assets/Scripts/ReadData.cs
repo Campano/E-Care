@@ -6,24 +6,31 @@ using System.IO;
 using System;
 
 public class ReadData : MonoBehaviour {
-
-	public Shimmer Shim = new Shimmer ("Shimmer","COM7"); //Initialise the sensor for the connection
+	
+	public Shimmer Shim = new Shimmer ("Shimmer","COM4"); //Initialise the sensor for the connection
 	public bool connect;
+	public bool stream;
 	public string labelText="";
-
+	
 	// Use this for initialization
 	void Start () {
 		labelText = "Start";
 		Shim.UICallback += this.HandleEvent;
 		connect = false;
+		stream = false;
 		this.Connect ();
-	
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		
+		if (Input.GetKeyDown("p")){
+			//print ("pause");
+			Disconnect ();
+		}
 	}
-
+	
 	void OnGUI () 
 	{
 		float x = 310;
@@ -32,7 +39,7 @@ public class ReadData : MonoBehaviour {
 		GUI.skin.box.fontSize = 32;
 		GUI.Box(new Rect(x, y, 230, 50),""+labelText );
 	}
-
+	
 	
 	public void Connect(){
 		if (Shim.GetState () != Shimmer.SHIMMER_STATE_CONNECTED) {
@@ -45,6 +52,8 @@ public class ReadData : MonoBehaviour {
 			}
 		}
 	}
+	
+	
 	
 	public void Disconnect(){
 		if (Shim != null) {
@@ -69,62 +78,64 @@ public class ReadData : MonoBehaviour {
 	
 	
 	public void HandleEvent(object sender, EventArgs args){
-	
-			CustomEventArgs eventArgs = (CustomEventArgs)args;
-			int indicator = eventArgs.getIndicator();
-			//print ("HandleEvent "+indicator + "vs "+(int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET);
-	
-			switch (indicator)
+		
+		CustomEventArgs eventArgs = (CustomEventArgs)args;
+		int indicator = eventArgs.getIndicator();
+		//print ("HandleEvent "+indicator + "vs "+(int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET);
+		
+		switch (indicator)
+		{
+		case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_STATE_CHANGE:
+			//print(((Shimmer)sender).GetDeviceName() + " State = " + ((Shimmer)sender).GetStateString() + System.Environment.NewLine);
+			int state = (int)eventArgs.getObject();
+			labelText="State "+Shim.GetStateString();
+			print ("State "+Shim.GetStateString());
+			//GUI.Label(new Rect(0, 0, 100, 20), Shim.GetStateString());
+			if (state == (int)Shimmer.SHIMMER_STATE_CONNECTED)
 			{
-			case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_STATE_CHANGE:
-						//print(((Shimmer)sender).GetDeviceName() + " State = " + ((Shimmer)sender).GetStateString() + System.Environment.NewLine);
-						int state = (int)eventArgs.getObject();
-						labelText="State "+Shim.GetStateString();
-						print ("State "+Shim.GetStateString());
-						//GUI.Label(new Rect(0, 0, 100, 20), Shim.GetStateString());
-						if (state == (int)Shimmer.SHIMMER_STATE_CONNECTED)
-						{
-							
-						}
-						else if (state == (int)Shimmer.SHIMMER_STATE_CONNECTING)
-						{
-							
-						}
-						else if (state == (int)Shimmer.SHIMMER_STATE_NONE)
-						{
-	
-						}
-						else if (state == (int)Shimmer.SHIMMER_STATE_STREAMING)
-						{
-	
-						}
-						break;
-			case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE:
-						string message = (string)eventArgs.getObject();
-						labelText= message;
-						print(message);
-						break;
-			case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET:
-	
-						if(Shim.GetEnabledSensors() >0){
-							// this is essential to ensure the object is not a reference
-							ObjectCluster objectCluster = new ObjectCluster((ObjectCluster)eventArgs.getObject());
-							List<String> names = objectCluster.GetNames();
-							List<String> formats = objectCluster.GetFormats();
-							List<String> units = objectCluster.GetUnits();
-							List<Double> data = objectCluster.GetData();
-							labelText=(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ();
-							//print ("value "+(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ());
-							//GUI.Label(new Rect(0, 0, 100, 20), ""+(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ());
+				if(!stream){
+					Shim.StartStreaming();
 				}
-						break;
-			case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_PACKET_RECEPTION_RATE:
-						/*double prr = (double)eventArgs.getObject();
+			}
+			else if (state == (int)Shimmer.SHIMMER_STATE_CONNECTING)
+			{
+				
+			}
+			else if (state == (int)Shimmer.SHIMMER_STATE_NONE)
+			{
+				
+			}
+			else if (state == (int)Shimmer.SHIMMER_STATE_STREAMING)
+			{
+				
+			}
+			break;
+		case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE:
+			string message = (string)eventArgs.getObject();
+			labelText= message;
+			print(message);
+			break;
+		case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET:
+			
+			if(Shim.GetEnabledSensors() >0){
+				// this is essential to ensure the object is not a reference
+				ObjectCluster objectCluster = new ObjectCluster((ObjectCluster)eventArgs.getObject());
+				List<String> names = objectCluster.GetNames();
+				List<String> formats = objectCluster.GetFormats();
+				List<String> units = objectCluster.GetUnits();
+				List<Double> data = objectCluster.GetData();
+				labelText=(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ();
+				//print ("value "+(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ());
+				//GUI.Label(new Rect(0, 0, 100, 20), ""+(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ());
+			}
+			break;
+		case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_PACKET_RECEPTION_RATE:
+			/*double prr = (double)eventArgs.getObject();
 						print (""+prr);*/
-						break;
-	
-			}
-			}
+			break;
+			
+		}
+	}
 	
 	public void printConsole(String toBePrinted){
 		print (toBePrinted);
