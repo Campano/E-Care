@@ -52,13 +52,13 @@
      <Compile Include="Assets\Scripts\SensorData.cs" />
      <Compile Include="Assets\Scripts\Shimmer.cs" />
  <Reference Include="OpenTK.Compatibility">
- <HintPath>C:/Users/Propriétaire/Documents/E-Sante/Assets/Preferences/OpenTK.Compatibility.dll</HintPath>
+ <HintPath>C:/Users/thoma_000/Documents/GitHub/E-Care/api-shimmer/E-Sante/Assets/Preferences/OpenTK.Compatibility.dll</HintPath>
  </Reference>
  <Reference Include="OpenTK">
- <HintPath>C:/Users/Propriétaire/Documents/E-Sante/Assets/Preferences/OpenTK.dll</HintPath>
+ <HintPath>C:/Users/thoma_000/Documents/GitHub/E-Care/api-shimmer/E-Sante/Assets/Preferences/OpenTK.dll</HintPath>
  </Reference>
  <Reference Include="OpenTK.GLControl">
- <HintPath>C:/Users/Propriétaire/Documents/E-Sante/Assets/Preferences/OpenTK.GLControl.dll</HintPath>
+ <HintPath>C:/Users/thoma_000/Documents/GitHub/E-Care/api-shimmer/E-Sante/Assets/Preferences/OpenTK.GLControl.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
