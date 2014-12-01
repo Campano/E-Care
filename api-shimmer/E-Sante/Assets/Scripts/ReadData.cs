@@ -11,6 +11,11 @@ public class ReadData : MonoBehaviour {
 	public bool connect;
 	public bool stream;
 	public string labelText="";
+
+	//Liste stockant les données
+	List <double> Cur_X;
+	List <double> Cur_Y;
+	List <double> Cur_Z;
 	
 	// Use this for initialization
 	void Start () {
@@ -124,7 +129,9 @@ public class ReadData : MonoBehaviour {
 				List<String> formats = objectCluster.GetFormats();
 				List<String> units = objectCluster.GetUnits();
 				List<Double> data = objectCluster.GetData();
-				labelText=(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ();
+				Cur_X.Add(double.Parse((objectCluster.GetData ("Low Noise Accelerometer X", "CAL")).GetData ().ToString ()));
+				Cur_Y.Add(double.Parse((objectCluster.GetData ("Low Noise Accelerometer Y", "CAL")).GetData ().ToString ()));
+				Cur_Z.Add(double.Parse((objectCluster.GetData ("Low Noise Accelerometer Z", "CAL")).GetData ().ToString ()));
 				//print ("value "+(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ());
 				//GUI.Label(new Rect(0, 0, 100, 20), ""+(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ());
 			}
