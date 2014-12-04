@@ -1,71 +1,77 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+ 
 public class OpenDoor : MonoBehaviour {
 	
 	[SerializeField]
-	public float moveSpeed;
-	public Rigidbody _porte;
-	public float ouverture; 
-
-	private float position_initiale;
-	private char orientation;
+	public float moveSpeedDoor = 2; 
+	public float moveSpeedLever = 4; 
+	public Rigidbody _door;
+	public Rigidbody _lever;
+	public GameObject _GUI;
+	
+	private Vector3 initialPositionDoor;
+	private Vector3 initialPositionLever;
+	private float ouverture; 
 	
 	/*
 		Use this for initialization
 	*/
 	void Start () 
 	{
-		if(_porte != null)
-		{
-			if(_porte.renderer.bounds.size.x > _porte.renderer.bounds.size.z) // Seulement les cas de portes coulissants sur l'axe des x ou z est pris en compte
-			{
-				orientation = 'x';
-				position_initiale = _porte.transform.position.x;
-			}
-			else 
-			{
-				orientation = 'z';
-				position_initiale = _porte.transform.position.z;
-			}
-		}
-    }
-
-
+		initialPositionDoor = _door.transform.position;
+		initialPositionLever = _lever.transform.position; 
+		//_GUI.renderer.enabled = false;
+	}
+	
+	
 	/*
 		UnTriggerStay is called at every frame while the player is in the trigger
 	*/
 	public void OnTriggerStay (Collider col) 
 	{
-		 if(_porte != null)
-		 {
-			if(Input.GetKey(KeyCode.P)) // INTEGRATION : récupérer le % d'ouverture et le stocker dans "long ouverture"
-			{
-				Debug.Log("getkey ");
-				if(orientation == 'x')
-				{
-					Debug.Log("DANS IF :"+orientation);
-					while(_porte.transform.position.x < position_initiale + (ouverture * _porte.renderer.bounds.size.x)) // tant qu'on n'a pas atteint la position finale
-					{	
-						Debug.Log("DANS WHILE :"+orientation);
-						_porte.transform.Translate(new Vector3(1, 0, 0) * moveSpeed * Time.deltaTime);
-					}
-					Debug.Log("APRES WHILE :"+orientation);
-				}
+		acquireMovement();
 
-				else if(orientation == 'z')
-				{
-					Debug.Log("DANS IF :"+orientation);
-					while(_porte.transform.position.z < position_initiale + (ouverture * _porte.renderer.bounds.size.z)) // tant qu'on n'a pas atteint la position finale
-					{	
-						Debug.Log("DANS WHILE :"+orientation);
-						_porte.transform.Translate(new Vector3(0, 0, 1) * moveSpeed * Time.deltaTime);
-					}
-				}
+		// Determination of the final position depending on ouverture
+		Vector3 finalPositionDoor = new Vector3(initialPositionDoor.x, 
+		                                            initialPositionDoor.y + (ouverture * _door.renderer.bounds.size.y), 
+		                                            initialPositionDoor.z);
 
-				else 
-					Debug.LogError("Erreur d'orientation de la porte : doit etre orienté selon x OU z");
-			}
-		 }
+		// Move the door depending on ouverture
+		_door.transform.position = Vector3.Lerp(_door.transform.position, 
+		                                        finalPositionDoor, 
+		                                          Time.deltaTime * moveSpeedDoor);
+	}
+
+	public void OnTriggerExit (Collider col)
+	{
+		//_GUI.renderer.enabled = false;
+	}
+
+	/*
+		Manage the acquisition of the movement's datas
+	*/
+	private void acquireMovement()
+	{
+		ouverture = 0.5f; // INTEGRATION ====================================================================================
+
+		/*
+		 * OUVRIR FENETRE DIALOGUE POUR INPUT 
+		 * _levier.transform.position = Vector3.Lerp (_levier.transform.position, 
+                  								position_intiale_levier, 
+                  								Time.deltaTime * moveSpeedLevier * 5);	
+		 */
+
+		//_GUI.renderer.enabled = true;
+
+
+		Vector3 finalPositionLever = new Vector3 (initialPositionLever.x + _lever.renderer.bounds.size.x / 2, 
+		                                              initialPositionLever.y, 
+		                                              initialPositionLever.z);
+
+
+		_lever.transform.position = Vector3.Lerp (_lever.transform.position, 
+		                                          finalPositionLever, 
+                  								Time.deltaTime * moveSpeedLever);				
 	}
 }
