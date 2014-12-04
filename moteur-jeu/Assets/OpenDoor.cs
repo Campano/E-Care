@@ -8,10 +8,11 @@ public class OpenDoor : MonoBehaviour {
 	public float moveSpeedLever = 4; 
 	public Rigidbody _door;
 	public Rigidbody _lever;
-	public GameObject _GUI;
 	
 	private Vector3 initialPositionDoor;
 	private Vector3 initialPositionLever;
+	private GameObject _GUI;
+	private GameObject _Counter;
 	private float ouverture; 
 	
 	/*
@@ -21,7 +22,12 @@ public class OpenDoor : MonoBehaviour {
 	{
 		initialPositionDoor = _door.transform.position;
 		initialPositionLever = _lever.transform.position; 
-		//_GUI.renderer.enabled = false;
+
+		_GUI = GameObject.Find("GUI Acquisition");
+		_Counter = GameObject.Find("Counter");
+
+		_GUI.SetActive(false);
+
 	}
 	
 	
@@ -45,7 +51,7 @@ public class OpenDoor : MonoBehaviour {
 
 	public void OnTriggerExit (Collider col)
 	{
-		//_GUI.renderer.enabled = false;
+		_GUI.SetActive(false);
 	}
 
 	/*
@@ -53,17 +59,12 @@ public class OpenDoor : MonoBehaviour {
 	*/
 	private void acquireMovement()
 	{
-		ouverture = 0.5f; // INTEGRATION ====================================================================================
+		_GUI.SetActive(true);
+		countDown ();
 
-		/*
-		 * OUVRIR FENETRE DIALOGUE POUR INPUT 
-		 * _levier.transform.position = Vector3.Lerp (_levier.transform.position, 
-                  								position_intiale_levier, 
-                  								Time.deltaTime * moveSpeedLevier * 5);	
-		 */
-
-		//_GUI.renderer.enabled = true;
-
+		// INTEGRATION ====================================================================================
+		ouverture = 0.5f; 
+		// ==================================================================================== INTEGRATION
 
 		Vector3 finalPositionLever = new Vector3 (initialPositionLever.x + _lever.renderer.bounds.size.x / 2, 
 		                                              initialPositionLever.y, 
@@ -73,5 +74,17 @@ public class OpenDoor : MonoBehaviour {
 		_lever.transform.position = Vector3.Lerp (_lever.transform.position, 
 		                                          finalPositionLever, 
                   								Time.deltaTime * moveSpeedLever);				
+	}
+
+	/*
+		Manage the countdown in the acquisition GUI
+	*/
+	private void countDown()
+	{
+		float startTime = Time.time;
+		float counter = Time.time - startTime;
+		_Counter.text = "bla";
+
+
 	}
 }
