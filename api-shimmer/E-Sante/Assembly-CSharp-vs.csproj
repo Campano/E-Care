@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Data_analysis.cs" />
      <Compile Include="Assets\Scripts\GradDes3DOrientation.cs" />
      <Compile Include="Assets\Scripts\ObjectCluster.cs" />
      <Compile Include="Assets\Scripts\ReadData.cs" />

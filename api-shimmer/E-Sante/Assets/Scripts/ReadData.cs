@@ -4,8 +4,14 @@ using System.Collections.Generic;
 using ShimmerAPI;
 using System.IO;
 using System;
+//using Data_analysis;
 
 public class ReadData : MonoBehaviour {
+
+	public List<double>[] Cur;
+	public List<double>[] Ref;
+	int count=0;
+	Data_analysis Analyse;
 	
 	public Shimmer Shim = new Shimmer ("Shimmer","COM4"); //Initialise the sensor for the connection
 	public bool connect;
@@ -16,6 +22,8 @@ public class ReadData : MonoBehaviour {
 	List <double> Cur_X;
 	List <double> Cur_Y;
 	List <double> Cur_Z;
+
+	Boolean read;
 	
 	// Use this for initialization
 	void Start () {
@@ -23,16 +31,47 @@ public class ReadData : MonoBehaviour {
 		Shim.UICallback += this.HandleEvent;
 		connect = false;
 		stream = false;
+		read = false;
 		this.Connect ();
-		
+		Cur = new List<double>[3];
+		Ref = new List<double>[3];
+		count = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 		if (Input.GetKeyDown("p")){
-			//print ("pause");
 			Disconnect ();
+		}
+		if (Input.GetKeyDown("a")){
+			Cur_X=new List<double>();
+			Cur_Y=new List<double>();
+			Cur_Z=new List<double>();
+			read=true;
+
+		}
+		if (Input.GetKeyDown("z")){
+			read=false;
+			this.GetList(count);
+			count++;
+
+			if(count==2)
+			{
+//				foreach(double red in Ref[0])
+//				{
+//					printConsole(red.ToString());
+//				}
+				int delai=0;
+				if(Ref[0]==null || Ref[1]==null || Ref[2]==null || Cur[0]==null || Cur[1]==null || Cur[2]==null)
+					printConsole("null quelque part");
+				Analyse = new Data_analysis();
+				this.Analyse.Analysis(delai,Ref[0],Ref[1],Ref[2],Cur[0],Cur[1],Cur[2]);
+				float Coef = this.Analyse.getcoef();
+				printConsole(Coef.ToString());
+				count=0;
+			}
+			
 		}
 	}
 	
@@ -129,10 +168,13 @@ public class ReadData : MonoBehaviour {
 				List<String> formats = objectCluster.GetFormats();
 				List<String> units = objectCluster.GetUnits();
 				List<Double> data = objectCluster.GetData();
-				Cur_X.Add(double.Parse((objectCluster.GetData ("Low Noise Accelerometer X", "CAL")).GetData ().ToString ()));
-				Cur_Y.Add(double.Parse((objectCluster.GetData ("Low Noise Accelerometer Y", "CAL")).GetData ().ToString ()));
-				Cur_Z.Add(double.Parse((objectCluster.GetData ("Low Noise Accelerometer Z", "CAL")).GetData ().ToString ()));
-				//print ("value "+(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ());
+				labelText=objectCluster.GetData ("Low Noise Accelerometer X", "CAL").GetData ().ToString ();
+				if(read==true)
+				{
+					Cur_X.Add(double.Parse((objectCluster.GetData ("Low Noise Accelerometer X", "CAL")).GetData ().ToString ()));
+					Cur_Y.Add(double.Parse((objectCluster.GetData ("Low Noise Accelerometer Y", "CAL")).GetData ().ToString ()));
+					Cur_Z.Add(double.Parse((objectCluster.GetData ("Low Noise Accelerometer Z", "CAL")).GetData ().ToString ()));
+				}//print ("value "+(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ());
 				//GUI.Label(new Rect(0, 0, 100, 20), ""+(objectCluster.GetData ("Gyroscope X", "RAW")).GetData ().ToString ());
 			}
 			break;
@@ -146,5 +188,28 @@ public class ReadData : MonoBehaviour {
 	
 	public void printConsole(String toBePrinted){
 		print (toBePrinted);
+	}
+
+	public void GetList(int i)
+	{
+		int j = i;
+		if ( j >= 0 && j < 2) {
+			if (j == 0)
+			{
+				Cur[0]=Cur_X;
+				Cur[1]=Cur_Y;
+				Cur[2]=Cur_Z;
+			}
+			else {
+				if (j == 1)
+				{
+					Ref[0]=Cur_X;
+					Ref[1]=Cur_Y;
+					Ref[2]=Cur_Z;
+				}
+				
+			}
+			
+		}
 	}
 }
