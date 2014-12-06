@@ -123,6 +123,8 @@ class Data_analysis
 	}
 	
 	//Calcul et retourne le dénominateur
+    //Tableau contenant les moyennes récupérées 
+    //Renvoit les dénominateur calculés
 	private float[] getdenominator(float[] Moy)
 	{
 		float[] deno = new float[] { 0, 0, 0, 0, 0, 0};
@@ -152,7 +154,9 @@ class Data_analysis
 		return (Transmit);
 	}
 	
-	//Calcul la corrélation, Necessite les moyennes et les dénominateur et retourne la corrélation
+	//Calcul la corrélation, 
+    //Necessite les moyennes et les dénominateur 
+    //retourne la corrélation calculée
 	private float[] getCore(float[] moyenne, float[] denom)
 	{
 		
@@ -161,28 +165,52 @@ class Data_analysis
 		for(int k=0; k<3; k++)
 		{
 			int j = 0;
-			for (int retard = -Delai; retard < Delai; retard++)
-			{
-				for (int i = 0; i < Ref[0].Count; i++)
-				{
-					j = i + retard;
-					if (j >= 0 && j < Ref[0].Count)
-					{
-						if(k==0)
-						{
-							Cor[k] = Cor[k] + ((float)Cur[0][i] - moyenne[k]) * ((float)Ref[0][j] - moyenne[k + 3]);
-						}
-						if (k == 1)
-						{
-							Cor[k] = Cor[k] + ((float)Cur[1][i] - moyenne[k]) * ((float)Ref_Axe_Y[j] - moyenne[k + 3]);
-						}
-						if (k == 2)
-						{
-							Cor[k] = Cor[k] + ((float)Cur[2][i] - moyenne[k]) * ((float)Ref[2][j] - moyenne[k + 3]);
-						}
-					}
-				}
-			}
+            if (Delai > 0)
+            {
+                for (int retard = -Delai; retard < Delai; retard++)
+                {
+                    for (int i = 0; i < Ref[0].Count; i++)
+                    {
+                        j = i + retard;
+                        if (j >= 0 && j < Ref[0].Count)
+                        {
+                            if (k == 0)
+                            {
+                                Cor[k] = Cor[k] + ((float)Cur[0][i] - moyenne[k]) * ((float)Ref[0][j] - moyenne[k + 3]);
+                            }
+                            if (k == 1)
+                            {
+                                Cor[k] = Cor[k] + ((float)Cur[1][i] - moyenne[k]) * ((float)Ref_Axe_Y[j] - moyenne[k + 3]);
+                            }
+                            if (k == 2)
+                            {
+                                Cor[k] = Cor[k] + ((float)Cur[2][i] - moyenne[k]) * ((float)Ref[2][j] - moyenne[k + 3]);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Ref[0].Count; i++)
+                {
+                    if (j >= 0 && j < Ref[0].Count)
+                    {
+                        if (k == 0)
+                        {
+                            Cor[k] = Cor[k] + ((float)Cur[0][i] - moyenne[k]) * ((float)Ref[0][j] - moyenne[k + 3]);
+                        }
+                        if (k == 1)
+                        {
+                            Cor[k] = Cor[k] + ((float)Cur[1][i] - moyenne[k]) * ((float)Ref_Axe_Y[j] - moyenne[k + 3]);
+                        }
+                        if (k == 2)
+                        {
+                            Cor[k] = Cor[k] + ((float)Cur[2][i] - moyenne[k]) * ((float)Ref[2][j] - moyenne[k + 3]);
+                        }
+                    }
+                }
+            }
 		}
 		
 		for (int i = 0; i < 3; i++)
