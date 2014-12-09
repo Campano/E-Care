@@ -1,5 +1,0 @@
-Animations pour le fade in/out : http://www.thegamecontriver.com/2014/09/add-fade-between-scenes-unity-46.html 
-
-TODO : 
-
-Ajouter fonc. appuie sur une touche zap les splashscreen
