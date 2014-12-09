@@ -136,11 +136,11 @@ class Data_analysis
 		{
 			for (int j = 0; j < Cur[i].Count; j++)
 			{
-				deno[i] = deno[i] + (float)((Cur[i][j] - (double)Moy[i]) * (Cur[i][j] - (double)Moy[i]));
+				deno[i] = deno[i] + (float)Math.Sqrt(((Cur[i][j] - (double)Moy[i])));
 			}
 			for (int j = 0; j < Ref[i].Count; j++)
 			{
-				deno[i+3] = deno[i+3] + (float)((Ref[i][j] - (double)Moy[i+3]) * (Ref[i][j] - (double)Moy[i+3]));
+				deno[i+3] = deno[i+3] + (float)Math.Sqrt(((Ref[i][j] - (double)Moy[i+3])));
 			}
 		}
 		
@@ -192,9 +192,9 @@ class Data_analysis
             }
             else
             {
-                for (int i = 0; i < Ref[0].Count; i++)
+                for (int i = 0; i < Math.Min(Ref[0].Count,Cur[0].Count); i++)
                 {
-                    if (j >= 0 && j < Ref[0].Count)
+					if (j >= 0 && j < Math.Min(Ref[0].Count,Cur[0].Count))
                     {
                         if (k == 0)
                         {
@@ -202,7 +202,7 @@ class Data_analysis
                         }
                         if (k == 1)
                         {
-                            Cor[k] = Cor[k] + ((float)Cur[1][i] - moyenne[k]) * ((float)Ref_Axe_Y[j] - moyenne[k + 3]);
+                            Cor[k] = Cor[k] + ((float)Cur[1][i] - moyenne[k]) * ((float)Ref[1][j] - moyenne[k + 3]);
                         }
                         if (k == 2)
                         {
@@ -215,6 +215,7 @@ class Data_analysis
 		
 		for (int i = 0; i < 3; i++)
 		{
+			Debug.Log (Cor[i]+"--"+denom[i]);
 			Cor[i] = Cor[i] / denom[i];
 		}
 		
