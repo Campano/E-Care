@@ -13,7 +13,7 @@ public class ReadData : MonoBehaviour {
 	int count=0;
 	Data_analysis Analyse;
 	
-	public Shimmer Shim = new Shimmer ("Shimmer","COM4"); //Initialise the sensor for the connection
+	public Shimmer Shim = new Shimmer ("Shimmer","COM3"); //Initialise the sensor for the connection
 	public bool connect;
 	public bool stream;
 	public string labelText="";

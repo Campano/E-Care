@@ -24,7 +24,7 @@ class Data_analysis
 	
 	
 	//Constructeur ,  necessite les 6 listes originale
-	public void Analysis(int DelaiMax, List<double>Ref_Axe_X,List<double>Ref_Axe_Y,List<double>Ref_Axe_Z,List<double>Cur_Axe_X,List<double>Cur_Axe_Y,List<double>Cur_Axe_Z)
+	public void Analysis(float DelaiMax, List<double>Ref_Axe_X,List<double>Ref_Axe_Y,List<double>Ref_Axe_Z,List<double>Cur_Axe_X,List<double>Cur_Axe_Y,List<double>Cur_Axe_Z)
 	{
 		Ref = new List<double>[3];
 		Ref[0]=Ref_Axe_X;
@@ -36,7 +36,7 @@ class Data_analysis
 		Cur[1]=Cur_Axe_Y;
 		Cur[2]=Cur_Axe_Z;
 		
-		Delai = DelaiMax;
+		Delai = (int)(DelaiMax*Math.Min (Cur [0].Count, Ref [0].Count));
 	}
 	
 	//Verifie que les listes sont de même tailles et récupère le coeficient de corrélation
@@ -66,9 +66,11 @@ class Data_analysis
 		
 		if (erreur == false)
 		{
+
 			r = Cross_Corelation();
-			double Corelation = (r[0] + r[1] + r[2]) / 3;
-			return ((r[0] + r[1] + r[2]) / 3);
+			float Corelation =0 ;
+			Corelation = (r[0] + r[1] + r[2]) / 3;
+			return Corelation;
 		}
 		else
 		{
@@ -85,7 +87,8 @@ class Data_analysis
 	{
 		float[] Corelation = new float[] { 0, 0, 0 };
 		float[] moyenne = new float[] { 0, 0, 0, 0, 0, 0};
-		float[] denominateur = new float[] { 0, 0, 0 };
+		float[] denominateur = new float[] { 0, 0, 0,0,0,0 };
+		int longueur = Math.Min (Cur [0].Count, Ref [0].Count);
 		moyenne = getmoyenne();
 		denominateur = getdenominator(moyenne);
 		Corelation = getCore(moyenne, denominateur);
@@ -98,11 +101,11 @@ class Data_analysis
 		float[] Moy = new float [] {0,0,0,0,0,0};
 		for (int i = 0; i < 3; i++)
 		{                
-			for (int j = 0; j < Cur[i].Count; j++)
+			for (int j = 0; j < Math.Min (Cur [i].Count, Ref [i].Count); j++)
 			{
 				Moy[i] = Moy[i] + (float)Cur[i][j];
 			}
-			for (int j = 0; j < Ref[i].Count; j++)
+			for (int j = 0; j < Math.Min (Cur [i].Count, Ref [i].Count); j++)
 			{
 				Moy[i + 3] = Moy[i + 3] + (float)Ref[i][j];
 			}
@@ -110,14 +113,7 @@ class Data_analysis
 		
 		for (int i = 0; i < Moy.Length; i++)
 		{
-			if (i < 3)
-			{
-				Moy[i] = Moy[i] / Cur[0].Count;
-			}
-			else
-			{
-				Moy[i] = Moy[i] / Ref[0].Count;
-			}
+			Moy[i]=Moy[i]/Math.Min (Cur [0].Count, Ref [0].Count);
 		}
 		return (Moy);
 	}
@@ -129,18 +125,22 @@ class Data_analysis
 	{
 		float[] deno = new float[] { 0, 0, 0, 0, 0, 0};
 		
-		float[] Transmit = new float[] { 0, 0, 0 };
+		float[] Transmit = new float[] { 0, 0, 0 ,0,0,0};
 		
 		
 		for (int i = 0; i < 3; i++)
 		{
-			for (int j = 0; j < Cur[i].Count; j++)
+			for (int j = 0; j < Math.Min (Cur [i].Count, Ref [i].Count); j++)
 			{
-				deno[i] = deno[i] + (float)Math.Sqrt(((Cur[i][j] - (double)Moy[i])));
+				float tmp = float.Parse((Cur[i][j] - (double)Moy[i]).ToString());
+				float tmp2 = (float)Math.Pow(tmp,2);
+				deno[i] = deno[i] + tmp2;
 			}
-			for (int j = 0; j < Ref[i].Count; j++)
+			for (int j = 0; j < Math.Min (Cur [i].Count, Ref [i].Count); j++)
 			{
-				deno[i+3] = deno[i+3] + (float)Math.Sqrt(((Ref[i][j] - (double)Moy[i+3])));
+				float tmp= float.Parse((Ref[i][j] - (double)Moy[i+3]).ToString());
+				float tmp2 = (float)Math.Pow(tmp,2);
+				deno[i+3] = deno[i+3] + tmp2;
 			}
 		}
 		
@@ -148,7 +148,9 @@ class Data_analysis
 		
 		for (int i = 0; i < Transmit.Length; i++)
 		{
-			Transmit[i] = (float)Math.Sqrt(deno[i] * deno[i + 3]);
+			Debug.Log("déno "+deno[i]);
+			Transmit[i] = (float)Math.Sqrt(deno[i]);
+			Debug.Log(Transmit[i]);
 		}
 		
 		return (Transmit);
@@ -162,62 +164,36 @@ class Data_analysis
 		
 		float[] Cor = new float[] {0,0,0};
 		
-		for(int k=0; k<3; k++)
-		{
+	
 			int j = 0;
-            if (Delai > 0)
-            {
-                for (int retard = -Delai; retard < Delai; retard++)
-                {
-                    for (int i = 0; i < Ref[0].Count; i++)
-                    {
-                        j = i + retard;
-                        if (j >= 0 && j < Ref[0].Count)
-                        {
-                            if (k == 0)
-                            {
-                                Cor[k] = Cor[k] + ((float)Cur[0][i] - moyenne[k]) * ((float)Ref[0][j] - moyenne[k + 3]);
-                            }
-                            if (k == 1)
-                            {
-                                Cor[k] = Cor[k] + ((float)Cur[1][i] - moyenne[k]) * ((float)Ref_Axe_Y[j] - moyenne[k + 3]);
-                            }
-                            if (k == 2)
-                            {
-                                Cor[k] = Cor[k] + ((float)Cur[2][i] - moyenne[k]) * ((float)Ref[2][j] - moyenne[k + 3]);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < Math.Min(Ref[0].Count,Cur[0].Count); i++)
-                {
-					if (j >= 0 && j < Math.Min(Ref[0].Count,Cur[0].Count))
-                    {
-                        if (k == 0)
-                        {
-                            Cor[k] = Cor[k] + ((float)Cur[0][i] - moyenne[k]) * ((float)Ref[0][j] - moyenne[k + 3]);
-                        }
-                        if (k == 1)
-                        {
-                            Cor[k] = Cor[k] + ((float)Cur[1][i] - moyenne[k]) * ((float)Ref[1][j] - moyenne[k + 3]);
-                        }
-                        if (k == 2)
-                        {
-                            Cor[k] = Cor[k] + ((float)Cur[2][i] - moyenne[k]) * ((float)Ref[2][j] - moyenne[k + 3]);
-                        }
-                    }
-                }
-            }
-		}
-		
-		for (int i = 0; i < 3; i++)
-		{
-			Debug.Log (Cor[i]+"--"+denom[i]);
-			Cor[i] = Cor[i] / denom[i];
-		}
+
+				List <double>[] nom = new List<double>[3];
+				for (int retard = -Delai; retard < Delai; retard++) {
+			
+						for (int i = 0; i < Ref[0].Count; i++) {
+								j = i + retard;
+								if (j >= 0 && j < Math.Min (Ref [0].Count, Cur [0].Count)) {
+										for (int k =0; k<3; k++) {
+
+												nom [k].Add (((float)Cur [k] [i] - moyenne [k]) * ((float)Ref [k] [j] - moyenne [k + 3]));
+
+										}
+								}
+						}
+
+				}
+			for(int l =0; l<3;l++)
+			{
+				double value=nom[l][0];
+				for(int m=0;m<nom[l].Count;m++)
+				{
+					if(value<nom[l][m])
+						value=nom[l][m];
+				}
+				Cor[l]=(float)(value/(denom[l]*denom[l+3]));
+			}
+
+
 		
 		return (Cor);
 	}
