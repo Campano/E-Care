@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Data_analysis.cs">
     <Files>
-      <File FileName="Assets\Scripts\Data_analysis.cs" Line="76" Column="4" />
+      <File FileName="Assets\Scripts\Data_analysis.cs" Line="194" Column="16" />
       <File FileName="Assets\Scripts\ReadData.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
