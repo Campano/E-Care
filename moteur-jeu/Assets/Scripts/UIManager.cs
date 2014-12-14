@@ -4,35 +4,39 @@ using System.Collections;
 
 public class UIManager : MonoBehaviour {
 
-	public float difficulty = 1f;
+	public int difficulty = 50;
 	private bool isSettingsUIActive;
 	GameObject panelSettings; 
 	Slider sliderDifficulty;
+	Text sliderDifficultyText;
 
 	// Called at initialisation
 	public void Start()
 	{
-		// Get the Settings panel and hide it
+		// Get the Settings panel
 		panelSettings = GameObject.Find ("Panel Settings"); 
+
+		// Get the difficulty slider and get and set the difficulty text
+		GameObject slider = GameObject.Find ("Difficulty Slider");
+			sliderDifficulty = slider.GetComponent<Slider>();
+		GameObject text = GameObject.Find ("Difficulty Text");
+			sliderDifficultyText = text.GetComponent<Text>();
+			sliderDifficultyText.text = "50";
+
+		// Hide the settings panel
 		panelSettings.SetActive (false);
 		isSettingsUIActive = false;
 
-		// Get the difficulty slider
-		GameObject slider = GameObject.Find ("Difficulty Slider");
-		sliderDifficulty = slider.GetComponent<Slider>();
 
 	}
 
 	// Load the game
-	public void startGame()
+	public void changeLevel(string level)
 	{
-		Application.LoadLevel ("Game");
-	}
-
-	// Quit he application
-	public void quit()
-	{
-		Application.Quit ();
+		if(level == "Quit")
+			Application.Quit();
+		else
+			Application.LoadLevel (level);
 	}
 
 	// Show/Hide Settings panel
@@ -57,8 +61,9 @@ public class UIManager : MonoBehaviour {
 	}
 
 	// Setter for (float)difficulty
-	public void setDifficulty(float d)
+	public void setDifficulty()
 	{
-		difficulty = sliderDifficulty.value;
+		difficulty = Mathf.RoundToInt(sliderDifficulty.value);
+		sliderDifficultyText.text = difficulty.ToString();
 	}
 }
