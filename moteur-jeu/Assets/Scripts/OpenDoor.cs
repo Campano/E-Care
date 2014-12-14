@@ -75,10 +75,15 @@ public class OpenDoor : MonoBehaviour {
 		// GameObject that will get the difficulty set in the setting's panel
 		GameObject UIgetter = GameObject.Find ("UI Manager");
 
-	
 		// INTEGRATION ====================================================================================
-		return ouverture = 0.5f * UIgetter.GetComponent<UIManager>().getDifficulty(); 
+		int analysisResult = 0.5f;
 		// ==================================================================================== INTEGRATION
+
+		// Serialize difficulty so difficulty<50 => serializedDifficulty<1 & difficulty>50 => serializedDifficulty>1
+		int serializedDifficulty = UIgetter.GetComponent<UIManager>().getDifficulty() / 50;
+
+		return ouverture = analysisResult * serializedDifficulty; 
+
 	}
 
 
