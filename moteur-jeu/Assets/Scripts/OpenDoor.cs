@@ -27,8 +27,6 @@ public class OpenDoor : MonoBehaviour {
 		initialPositionLever = _lever.transform.position; 
 
 		_GUI = GameObject.Find("GUI Acquisition");
-		_Counter = GameObject.Find("Counter");
-		textCounter = _Counter.GetComponent <Text> ();
 
 		_GUI.SetActive(false);
 
@@ -73,7 +71,6 @@ public class OpenDoor : MonoBehaviour {
 	{
 		// Show acquirement GUI
 		_GUI.SetActive(true);
-		countDown ();
 		
 		// INTEGRATION ====================================================================================
 		return ouverture = 0.5f; 
@@ -87,27 +84,5 @@ public class OpenDoor : MonoBehaviour {
 	public void OnTriggerExit (Collider col)
 	{
 		_GUI.SetActive(false);
-	}
-
-
-/*
-*	Manage the countdown in the acquisition GUI
-*/
-	private IEnumerator countDown()
-	{
-		for(int counter = 3; counter >=0; counter--)
-		{	
-			print (counter+ "  "+Time.time);
-			yield return StartCoroutine(wait(0.5f));
-			textCounter.text = counter.ToString();
-		}
-	}
-
-	private IEnumerator wait(float waitTime)
-	{
-		float endTime = Time.realtimeSinceStartup + waitTime;
-		
-		while (Time.realtimeSinceStartup < endTime) 
-			yield return null;
 	}
 }

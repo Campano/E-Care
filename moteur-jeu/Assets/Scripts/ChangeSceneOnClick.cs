@@ -6,7 +6,7 @@ public class ChangeSceneOnClick : MonoBehaviour {
 	public string nextScene = "";
 	
 	// Update is called once per frame
-	public void Update () 
+	public void start () 
 	{
 		if (Input.GetMouseButtonDown (0) || (Input.touches != null && Input.touches.Length > 0)) 
 		{
