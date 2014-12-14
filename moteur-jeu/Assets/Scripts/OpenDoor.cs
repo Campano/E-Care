@@ -71,9 +71,13 @@ public class OpenDoor : MonoBehaviour {
 	{
 		// Show acquirement GUI
 		_GUI.SetActive(true);
+
+		// GameObject that will get the difficulty set in the setting's panel
+		GameObject UIgetter = GameObject.FindGameObjectWithTag ("UI Manager");
+
 		
 		// INTEGRATION ====================================================================================
-		return ouverture = 0.5f; 
+		return ouverture = 0.5f * UIgetter.GetComponent<UIManager>().getDifficulty(); 
 		// ==================================================================================== INTEGRATION
 	}
 
