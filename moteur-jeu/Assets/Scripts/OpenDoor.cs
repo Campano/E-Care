@@ -26,8 +26,8 @@ public class OpenDoor : MonoBehaviour {
 		initialPositionDoor = _door.transform.position;
 		initialPositionLever = _lever.transform.position; 
 
+		// Get and hide the acquisition UI
 		_GUI = GameObject.Find("GUI Acquisition");
-
 		_GUI.SetActive(false);
 
 	}
@@ -73,9 +73,9 @@ public class OpenDoor : MonoBehaviour {
 		_GUI.SetActive(true);
 
 		// GameObject that will get the difficulty set in the setting's panel
-		GameObject UIgetter = GameObject.FindGameObjectWithTag ("UI Manager");
+		GameObject UIgetter = GameObject.Find ("UI Manager");
 
-		
+	
 		// INTEGRATION ====================================================================================
 		return ouverture = 0.5f * UIgetter.GetComponent<UIManager>().getDifficulty(); 
 		// ==================================================================================== INTEGRATION
