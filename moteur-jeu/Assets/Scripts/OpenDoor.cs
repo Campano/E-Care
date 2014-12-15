@@ -76,7 +76,7 @@ public class OpenDoor : MonoBehaviour {
 		GameObject UIgetter = GameObject.Find ("UI Manager");
 
 		// INTEGRATION ====================================================================================
-		float analysisResult = 0.5f;
+		float analysisResult = 0.5f; // GameObject.Find("Connexion Manager").GetComponent<UIManager>().VOTRE_FONCTION_();
 		// ==================================================================================== INTEGRATION
 
 		// Serialize difficulty so difficulty<50 => serializedDifficulty<1 & difficulty>50 => serializedDifficulty>1
