@@ -32,10 +32,9 @@ public class UIManager : MonoBehaviour {
 
 	// Load the game
 	public void changeLevel(string level)
-	{
-		if(level == "Quit")
-			Application.Quit();
-		else
+	{			print ("avant");
+			GameObject.Find("Connexion Manager").GetComponent<ConnexionManagerScript>().Disconnect();
+		print ("apres");
 			Application.LoadLevel (level);
 	}
 
