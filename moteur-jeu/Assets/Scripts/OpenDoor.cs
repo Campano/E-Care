@@ -76,11 +76,11 @@ public class OpenDoor : MonoBehaviour {
 		GameObject UIgetter = GameObject.Find ("UI Manager");
 
 		// INTEGRATION ====================================================================================
-		int analysisResult = 0.5f;
+		float analysisResult = 0.5f;
 		// ==================================================================================== INTEGRATION
 
 		// Serialize difficulty so difficulty<50 => serializedDifficulty<1 & difficulty>50 => serializedDifficulty>1
-		int serializedDifficulty = UIgetter.GetComponent<UIManager>().getDifficulty() / 50;
+		float serializedDifficulty = UIgetter.GetComponent<UIManager>().getDifficulty() / 50;
 
 		return ouverture = analysisResult * serializedDifficulty; 
 
