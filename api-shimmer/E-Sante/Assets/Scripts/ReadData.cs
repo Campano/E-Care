@@ -13,7 +13,7 @@ public class ReadData : MonoBehaviour {
 	int count=0;
 	Data_analysis Analyse;
 	
-	public Shimmer Shim = new Shimmer ("Shimmer","COM6"); //Initialise the sensor for the connection
+	public Shimmer Shim = new Shimmer ("Shimmer","COM5"); //Initialise the sensor for the connection
 	public bool connect;
 	public bool stream;
 	public string labelText="";
@@ -63,8 +63,7 @@ public class ReadData : MonoBehaviour {
 //					printConsole(red.ToString());
 //				}
 				float delai=0.1f;
-				if(Ref[0]==null || Ref[1]==null || Ref[2]==null || Cur[0]==null || Cur[1]==null || Cur[2]==null)
-					printConsole("null quelque part");
+
 				Analyse = new Data_analysis();
 				this.Analyse.Analysis(delai,Ref[0],Ref[1],Ref[2],Cur[0],Cur[1],Cur[2]);
 				float Coef = this.Analyse.getcoef();

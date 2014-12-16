@@ -17,12 +17,17 @@ public class OpenDoor : MonoBehaviour {
 	private float ouverture; 
 	private Text textCounter;
 	float startTime;
+
+	bool isInside;
+	bool isCompleted;
 	
 /*
 *	Use this for initialization
 */
 	void Start () 
 	{
+		isInside = false;
+		isCompleted = false;
 		initialPositionDoor = _door.transform.position;
 		initialPositionLever = _lever.transform.position; 
 
@@ -38,6 +43,7 @@ public class OpenDoor : MonoBehaviour {
 */
 	public void OnTriggerStay (Collider col) 
 	{
+		isInside = true;
 		// Move door and lever if movement was succesfully acquired
 		if (acquireMovement() != 0) 
 		{
@@ -76,8 +82,11 @@ public class OpenDoor : MonoBehaviour {
 		GameObject UIgetter = GameObject.Find ("UI Manager");
 
 		// INTEGRATION ====================================================================================
-		float analysisResult = 0.5f; // GameObject.Find("Connexion Manager").GetComponent<UIManager>().VOTRE_FONCTION_();
-		// ==================================================================================== INTEGRATION
+	//	while (!isCompleted) {
+		//		}
+		float analysisResult =GameObject.Find("Connexion Manager").GetComponent<ConnexionManagerScript>().getCoef();
+		print (analysisResult);
+			// ==================================================================================== INTEGRATION
 
 		// Serialize difficulty so difficulty<50 => serializedDifficulty<1 & difficulty>50 => serializedDifficulty>1
 		float serializedDifficulty = UIgetter.GetComponent<UIManager>().getDifficulty() / 50;
@@ -91,7 +100,18 @@ public class OpenDoor : MonoBehaviour {
 *	UnTriggerExit is called once when the player leave the trigger
 */
 	public void OnTriggerExit (Collider col)
-	{
+	{	isInside = false;
 		_GUI.SetActive(false);
 	}
+
+
+	public bool getisInside(){
+		return isInside;
+	}
+
+	public void setIsCompleted (bool value){
+		isCompleted = value;
+	}
 }
+
+
