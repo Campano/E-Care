@@ -6,12 +6,9 @@ public class OpenDoor : MonoBehaviour {
 	
 	[SerializeField]
 	public float moveSpeedDoor = 2; 
-	public float moveSpeedLever = 4; 
 	public Rigidbody _door;
-	public Rigidbody _lever;
 	
 	private Vector3 initialPositionDoor;
-	private Vector3 initialPositionLever;
 	private GameObject _GUI;
 	private GameObject _Counter;
 	private float ouverture; 
@@ -29,7 +26,6 @@ public class OpenDoor : MonoBehaviour {
 		isInside = false;
 		isCompleted = false;
 		initialPositionDoor = _door.transform.position;
-		initialPositionLever = _lever.transform.position; 
 
 		// Get and hide the acquisition UI
 		_GUI = GameObject.Find("GUI Acquisition");
@@ -56,16 +52,6 @@ public class OpenDoor : MonoBehaviour {
 			_door.transform.position = Vector3.Lerp (_door.transform.position, 
                                 finalPositionDoor, 
                                   Time.deltaTime * moveSpeedDoor);
-
-			// Determination of the lever final position
-			Vector3 finalPositionLever = new Vector3 (initialPositionLever.x + _lever.renderer.bounds.size.x / 2, 
-                                  initialPositionLever.y, 
-                                  initialPositionLever.z);
-
-			// Move the lever 
-			_lever.transform.position = Vector3.Lerp (_lever.transform.position, 
-                                  finalPositionLever, 
-                                  Time.deltaTime * moveSpeedLever);
 		}
 	}
 
