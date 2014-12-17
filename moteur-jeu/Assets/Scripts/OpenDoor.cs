@@ -10,10 +10,7 @@ public class OpenDoor : MonoBehaviour {
 	
 	private Vector3 initialPositionDoor;
 	private GameObject _GUI;
-	private GameObject _Counter;
 	private float ouverture; 
-	private Text textCounter;
-	float startTime;
 
 	bool isInside;
 	bool isCompleted;
@@ -28,7 +25,7 @@ public class OpenDoor : MonoBehaviour {
 		initialPositionDoor = _door.transform.position;
 
 		// Get and hide the acquisition UI
-		_GUI = GameObject.Find("GUI Acquisition");
+		_GUI = GameObject.Find ("GUI Acquisition");
 		_GUI.SetActive(false);
 
 	}
@@ -39,7 +36,9 @@ public class OpenDoor : MonoBehaviour {
 */
 	public void OnTriggerStay (Collider col) 
 	{
+		print ("is Inside = " + isInside);
 		isInside = true;
+		print ("is Inside = " + isInside);
 		// Move door and lever if movement was succesfully acquired
 		if (acquireMovement() != 0) 
 		{
