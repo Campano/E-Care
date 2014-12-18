@@ -10,6 +10,7 @@ public class ConnexionManagerScript : MonoBehaviour {
 
 	Text text;
 	GameObject connexionButton;
+	GameObject connexionCanvas;
 
 	
 	public List<double>[] Cur;
@@ -38,6 +39,7 @@ public class ConnexionManagerScript : MonoBehaviour {
 		GameObject connexionText = GameObject.Find("Connexion Status");
 			text = connexionText.GetComponent<Text>();
 		connexionButton = GameObject.Find("Connexion Button");
+		connexionCanvas = GameObject.Find ("GUI Connexion");
 
 		// Hide retry button
 		connexionButton.SetActive (false);
@@ -235,7 +237,7 @@ public class ConnexionManagerScript : MonoBehaviour {
 			stopAcquisition();
 		}
 	}
-	// Update the text and the retry button according to the status
+	// Update the text and the retry button according to the status. Hide the connexion canvas if connected
 	private void updateStatus (string status) {
 		switch (status) 
 
@@ -246,7 +248,6 @@ public class ConnexionManagerScript : MonoBehaviour {
 
 			case "connected": 
 				text.text = "Capteurs connectes";
-				//InvokeRepeating(CANVAS.SetActive (false), 2, 0); INTEGRAAAAAAAAAAAAAAAAAAAAAAAAAAATIOOOOOON
 			break;
 
 			case "error": 
@@ -255,6 +256,11 @@ public class ConnexionManagerScript : MonoBehaviour {
 				connexionButton.SetActive (true);
 			break;
 		}
+	}
+
+	public void hideConnexionCanvas()
+	{
+		connexionCanvas.SetActive (false);
 	}
 
 	public void startAcquisition(){
