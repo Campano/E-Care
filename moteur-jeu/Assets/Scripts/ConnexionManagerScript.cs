@@ -2,34 +2,42 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using ShimmerAPI;
+using ShimmerAPI; //API à intégrer dans le projet
 using System.IO;
 using System;
 
 public class ConnexionManagerScript : MonoBehaviour {
 
+	//Variables de classe
 	Text text;
 	GameObject connexionButton;
 	GameObject connexionCanvas;
 
-	
-	public List<double>[] Cur;
-	public List<double>[] Ref;
-	int count=0;
-	Data_analysis Analyse;
-	
-	public Shimmer Shim = new Shimmer ("Shimmer","COM5"); //Initialise the sensor for the connection
+	//Listes regroupant les données du mouvement
+	public List<double>[] Cur; //mouvement du patient
+	public List<double>[] Ref; //mouvement de référence
+	int count=0; //représente qui fait le mouvement: 0=Kiné 1=Patient
+	Data_analysis Analyse; 
+
+	//Initialisation du shimmer: Shimmer(nom,PortCOM);
+	public Shimmer Shim = new Shimmer ("Shimmer","COM5");
+	//isConnected ?
 	public bool connect;
+	//isStreaming?
 	public bool stream;
+	//variable qui enregistre les messages envoyés par le capteur
 	public string labelText="";
+	//Statut du capteur
 	public string status="";
 	
 	//Liste stockant les données
-	List <double> Cur_X;
-	List <double> Cur_Y;
-	List <double> Cur_Z;
-	
+	List <double> Cur_X; //mouvement sur X
+	List <double> Cur_Y; //mouvement sur Y
+	List <double> Cur_Z; //mouvement sur Z
+
+	//Are we reading the data ?
 	Boolean read;
+	//Coefficient de corrélation, pourcentage de réussite du mouvement 0<coef<1
 	float Coef;
 
 	// Use this for initialization
@@ -58,24 +66,24 @@ public class ConnexionManagerScript : MonoBehaviour {
 		// Hide retry button
 		connexionButton.SetActive (false);
 
-		// INTEGRATION ====================================================================================
 		//						 		LANCER CONNEXION
+			//Début de la connexion
 			labelText = "Start";
+			//Attribution du HandleEvent au Capteur Shimmer
 			Shim.UICallback += this.HandleEvent;
+			//not connected
 			connect = false;
+			//not streaming
 			stream = false;
+			//not reading
 			read = false;
+			//===>Connexion<===
 			this.Connect ();
+
+			//Initialisation des listes de mouvements
 			Cur = new List<double>[3];
 			Ref = new List<double>[3];
 			count = 0;
-		//						
-		//								if(CONNEXION FAILED)
-		//									updateStatus ("error");
-		//						
-		//								if(CONNEXION SUCCESS)
-		//									updateStatus ("connected");
-		// ==================================================================================== INTEGRATION
 	}
 
 	public void Connect(){
